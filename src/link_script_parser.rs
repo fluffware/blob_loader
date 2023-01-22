@@ -2,7 +2,7 @@ use nom::{
     branch::alt,
     bytes::complete::{tag, take_until},
     character::complete::{
-        alphanumeric1, char as nom_char, digit1, hex_digit1, multispace0, multispace1, space0,
+        alphanumeric1, char as nom_char, digit1, hex_digit1, space0,
     },
     combinator::{map, map_res, opt},
     error::ErrorKind,
@@ -204,15 +204,6 @@ fn memory_line(input: &str) -> IResult<&str, (&str, Option<&str>, i64, i64), Lin
         return Err(nom::Err::Failure(LinkParseError{input, kind: LinkParseErrorKind::MissingLength}))
     };
     Ok((input, (name, attr, origin, length)))
-}
-
-pub fn memory(input: &str) -> IResult<&str, Vec<(&str, Option<&str>, i64, i64)>, LinkParseError> {
-    let (input, _) = take_until("MEMORY")(input)?;
-    let (input, _) = tuple((tag("MEMORY"), multispace0, tag("{"), multispace0))(input)?;
-
-    let (input, lines) = separated_list1(multispace1, memory_line)(input)?;
-    let (input, _) = pair(multispace0, nom_char('}'))(input)?;
-    Ok((input, lines))
 }
 
 fn named_memory_line<'a>(

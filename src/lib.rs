@@ -1,2 +1,4 @@
-pub mod link_script_parser;
-pub mod build_blob;
+mod link_script_parser;
+mod build_blob;
+pub mod blob_info;
+pub use build_blob::prepare_blob;
